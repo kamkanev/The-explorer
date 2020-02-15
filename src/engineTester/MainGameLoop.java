@@ -114,7 +114,7 @@ public class MainGameLoop {
 		WaterRenderer waterRenderer = new WaterRenderer(loader, waterShader, renderer.getProjectionMatrix(), fbos);
 		List<WaterTile> waters = new ArrayList<WaterTile>();
 		
-		WaterTile water = new WaterTile(70, 300, -3);
+		WaterTile water = new WaterTile(70, 300, -4);
 		waters.add(water);
 		
 		
@@ -273,7 +273,7 @@ public class MainGameLoop {
 			
 			//render refraction texture
 			fbos.bindRefractionFrameBuffer();
-			renderer.renderScene(entities, terrains, lights, camera, player, new Vector4f(0, -1, 0, water.getHeight()));
+			renderer.renderScene(entities, terrains, lights, camera, player, new Vector4f(0, -1, 0, water.getHeight()+1f));
 			
 			
 			//render to screen
