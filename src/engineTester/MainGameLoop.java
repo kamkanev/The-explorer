@@ -1,5 +1,6 @@
 package engineTester;
 
+import java.io.ObjectInputStream.GetField;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -114,7 +115,7 @@ public class MainGameLoop {
 		WaterRenderer waterRenderer = new WaterRenderer(loader, waterShader, renderer.getProjectionMatrix(), fbos);
 		List<WaterTile> waters = new ArrayList<WaterTile>();
 		
-		WaterTile water = new WaterTile(70, 300, -4);
+		WaterTile water = new WaterTile(70, 300, -4, true);
 		waters.add(water);
 		
 		
@@ -138,14 +139,11 @@ public class MainGameLoop {
 		}
 		
 		
-		for(int i=0;i<300;i++){
-			boolean notRendered = false;
+		for(int i=0;i<180;i++){
 			float x = random.nextFloat()* Terrain.getSize() * (terrain.getX() / Terrain.getSize() + 1);
 			float z = random.nextFloat()* Terrain.getSize() * (terrain.getZ() / Terrain.getSize() + 1);
 			float y = terrain.getHeightOfTerrain(x, z);
 			
-			if(y <= water.getHeight()) {
-				if((x < water.getX() || x > water.getX() + water.TILE_SIZE) && (z < water.getZ() || z > water.getZ() + water.TILE_SIZE)) {
 					if(i % 2 == 0) {
 //						entities.add(new Entity(treeModel, new Vector3f(x, y, z),0,0,0,5));
 						entities.add(new Entity(tree2Model, 0, new Vector3f(x, y, z),0,0,0,1.3f));
@@ -153,8 +151,7 @@ public class MainGameLoop {
 //						entities.add(new Entity(tree1Model, new Vector3f(x, y, z),0,0,0,0.3f));
 						entities.add(new Entity(tree2Model, 2, new Vector3f(x, y, z),0,0,0,1.3f));
 					}
-				}
-			}else {
+
 				if(i % 2 == 0) {
 //					entities.add(new Entity(treeModel, new Vector3f(x, y, z),0,0,0,5));
 					entities.add(new Entity(tree2Model, 0, new Vector3f(x, y, z),0,0,0,1.3f));
@@ -162,22 +159,22 @@ public class MainGameLoop {
 //					entities.add(new Entity(tree1Model, new Vector3f(x, y, z),0,0,0,0.3f));
 					entities.add(new Entity(tree2Model, 2, new Vector3f(x, y, z),0,0,0,1.3f));
 				}
-			}
+			
 			
 			 x = random.nextFloat()* Terrain.getSize() * (terrain.getX() / Terrain.getSize() + 1);
 			 z = random.nextFloat()* Terrain.getSize() * (terrain.getZ() / Terrain.getSize() + 1);
 			 y = terrain.getHeightOfTerrain(x, z);
-			 if(y <= water.getHeight()) {
-				 if((x < water.getX() || x > water.getX() + water.TILE_SIZE) && (z < water.getZ() || z > water.getZ() + water.TILE_SIZE)) {
+			 
+				 
 					 entities.add(new Entity(bush, 0, new Vector3f(x, y, z),0,0,0,3));
-				 }
-			 }else {
+				 
+			 
 				 if(i%2 == 0) {
 					 entities.add(new Entity(bush, 0, new Vector3f(x, y, z),0,0,0,3));
 				 }else {
 					 entities.add(new Entity(bush, 2, new Vector3f(x, y, z),0,0,0,3));
 				 }
-			 }
+			 
 			
 		}
 		
@@ -188,14 +185,13 @@ public class MainGameLoop {
 			float z = random.nextFloat()* Terrain.getSize() * (terrain.getZ() / Terrain.getSize() + 1);
 			float y = terrain.getHeightOfTerrain(x, z);
 			
-			if(y <= water.getHeight()) {
-				if((x < water.getX() || x > water.getX() + water.TILE_SIZE) && (z < water.getZ() || z > water.getZ() + water.TILE_SIZE)) {
+
 					entities.add(new Entity(fern, random.nextInt(4), new Vector3f(x, y, z), 0, 0, 0, 0.6f));
-				}
-			}else{
+				
+			
 					entities.add(new Entity(fern, random.nextInt(4), new Vector3f(x, y, z), 0, 0, 0, 0.6f));
 
-			}
+			
 		}
 		
 		
@@ -203,8 +199,8 @@ public class MainGameLoop {
 		
 		List<Light> lights = new ArrayList<Light>();
 		lights.add(sun);
-		lights.add(new Light(new Vector3f(220, terrain.getHeightOfTerrain(220, 170) + 12, 170), new Vector3f(2, 2, 2), new Vector3f(0.7f, 0.001f, 0.0006f)));
-		lights.add(new Light(new Vector3f(185, terrain.getHeightOfTerrain(185, 293) + 12, 293), new Vector3f(0, 2, 2), new Vector3f(1, 0.002f, 0.001f)));
+		lights.add(new Light(new Vector3f(220, terrain.getHeightOfTerrain(220, 170) + 12, 170), new Vector3f(2, 2, 2), new Vector3f(1f, 0.001f, 0.002f)));
+		lights.add(new Light(new Vector3f(185, terrain.getHeightOfTerrain(185, 293) + 12, 293), new Vector3f(0, 2, 2), new Vector3f(1f, 0.002f, 0.001f)));
 		
 		entities.add(new Entity(lamp, new Vector3f(220, terrain.getHeightOfTerrain(220, 170), 170), 0, 0, 0, 1));
 		entities.add(new Entity(lamp, new Vector3f(185, terrain.getHeightOfTerrain(185, 293), 293), 0, 0, 0, 1));
@@ -230,9 +226,10 @@ public class MainGameLoop {
 //		Light light = new Light(new Vector3f(293, 7, -305), new Vector3f(2, 2, 0), new Vector3f(1, 0.01f, 0.002f));
 //		lights.add(light);
 		
-		System.out.println(water.getX());
+		
 		
 		MousePicker picker = new MousePicker(camera, renderer.getProjectionMatrix(), terrains);
+		
 		
 		while(!Display.isCloseRequested()){
 			
@@ -240,15 +237,44 @@ public class MainGameLoop {
 			
 			camera.move();
 			
+//			for(WaterTile w : waters) {
+//				if(player.getPosition().x >= w.getX() && player.getPosition().x <= w.getX() + Terrain.getSize() && 
+//						player.getPosition().z >= w.getZ() && player.getPosition().z <= w.getZ() + Terrain.getSize() && !w.getIsFrozen()) {
+//					player.getPosition().y = w.getHeight();
+//				}
+//			}
 			
+			boolean onTerrain = false;
+			Vector2f offSetToNearestTerrain = null;
 			for (Terrain terr : terrains) {
-				if(player.getPosition().x > terr.getX() && player.getPosition().x < terr.getX() + Terrain.getSize() && 
-						player.getPosition().z > terr.getZ() && player.getPosition().z < terr.getZ() + Terrain.getSize()) {
+				if(player.getPosition().x >= terr.getX() && player.getPosition().x <= terr.getX() + Terrain.getSize() && 
+						player.getPosition().z >= terr.getZ() && player.getPosition().z <= terr.getZ() + Terrain.getSize()) {
 					player.move(terr);
+					onTerrain = true;
 				}else {
 //					System.out.println("out");
+					Vector2f currOffset = new Vector2f(terr.getX() - player.getPosition().x, terr.getZ() - player.getPosition().z);
+					
+					
+					if(offSetToNearestTerrain != null) {
+						float currDiff = (float) Math.sqrt(Math.pow(currOffset.x, 2) + Math.pow(currOffset.y, 2));
+						float nearDiff = (float) Math.sqrt(Math.pow(offSetToNearestTerrain.x, 2) + Math.pow(offSetToNearestTerrain.y, 2));
+						
+						if(currDiff < nearDiff) {
+							offSetToNearestTerrain = currOffset;
+						}
+						
+						
+					}else {
+						offSetToNearestTerrain = currOffset;
+					}
 				}
 				
+			}
+			
+			
+			if(!onTerrain) {
+				player.setPosition(new Vector3f(player.getPosition().x + offSetToNearestTerrain.x, player.getPosition().y, player.getPosition().z + offSetToNearestTerrain.y));
 			}
 			
 			picker.update();

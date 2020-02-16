@@ -1,11 +1,14 @@
 package entities;
 
+import java.util.Collection;
+
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.util.vector.Vector3f;
 
 import models.TexturedModel;
 import renderEngine.DisplayManager;
 import terrains.Terrain;
+import water.WaterTile;
 
 public class Player extends Entity {
 	private static final float RUN_SPEED = 20;

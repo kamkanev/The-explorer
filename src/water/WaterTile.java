@@ -6,11 +6,19 @@ public class WaterTile {
 	
 	private float height;
 	private float x,z;
+	private boolean isFrozen = false;
 	
 	public WaterTile(float centerX, float centerZ, float height){
 		this.x = centerX;
 		this.z = centerZ;
 		this.height = height;
+	}
+	
+	public WaterTile(float centerX, float centerZ, float height, boolean isFrozen){
+		this.x = centerX;
+		this.z = centerZ;
+		this.height = height;
+		this.isFrozen = isFrozen;
 	}
 
 	public float getHeight() {
@@ -23,6 +31,10 @@ public class WaterTile {
 
 	public float getZ() {
 		return z;
+	}
+
+	public boolean getIsFrozen() {
+		return isFrozen;
 	}
 
 
