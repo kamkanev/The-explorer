@@ -14,14 +14,22 @@ uniform sampler2D dudvMap;
 uniform sampler2D normalMap;
 uniform sampler2D depthMap;
 uniform vec3 lightColour;
+uniform bool isFrozen;
 
 uniform float moveFactor;
 
-const float waveStrength = 0.04;
-const float shineDamper = 20.0;
-const float reflectivity = 0.5;
+ float waveStrength = 0.04;
+ float shineDamper = 20.0;
+ float reflectivity = 0.5;
 
 void main(void) {
+
+  if(isFrozen){
+    waveStrength = 0;
+    shineDamper = 10.0;
+    reflectivity = 0.2;
+    //moveFactor = 0;
+  }
 
  vec2 ndc = (clipSpace.xy/clipSpace.w)/2.0 + 0.5;
  vec2 refractTexCoords = vec2(ndc.x, ndc.y);
@@ -39,7 +47,11 @@ void main(void) {
 
  vec2 distortedTexCoords = texture(dudvMap, vec2(textureCoords.x + moveFactor, textureCoords.y)).rg*0.1;
  	distortedTexCoords = textureCoords + vec2(distortedTexCoords.x, distortedTexCoords.y+moveFactor);
- 	vec2 totalDistortion = (texture(dudvMap, distortedTexCoords).rg * 2.0 - 1.0) * waveStrength * clamp(waterDepth/20.0, 0.0, 1.0);
+ 	vec2 totalDistortion = (texture(dudvMap, distortedTexCoords).rg * 2.0 - 1.0) * waveStrength;
+
+  if(!isFrozen){
+    totalDistortion = (texture(dudvMap, distortedTexCoords).rg * 2.0 - 1.0) * waveStrength * clamp(waterDepth/20.0, 0.0, 1.0);
+  }
 
  refractTexCoords += totalDistortion;
  refractTexCoords = clamp(refractTexCoords, 0.001, 0.999);
@@ -62,11 +74,20 @@ void main(void) {
  vec3 reflectedLight = reflect(normalize(fromLightVector), normal);
 	float specular = max(dot(reflectedLight, viewVector), 0.0);
 	specular = pow(specular, shineDamper);
-	vec3 specularHighlights = lightColour * specular * reflectivity * clamp(waterDepth/5.0, 0.0, 1.0);
+	vec3 specularHighlights = lightColour * specular * reflectivity;
 
- out_Color = mix(reflectionColour, refractionColour, reflectiveFactor);
- out_Color = mix(out_Color, vec4(0.0, 0.3, 0.5, 1.0), 0.2) + vec4(specularHighlights, 0.0);
- out_Color.a = clamp(waterDepth/5.0, 0.0, 1.0);
+  if(isFrozen){
+    out_Color = mix(reflectionColour, refractionColour, reflectiveFactor);
+     out_Color = mix(out_Color, vec4(0.0, 0.3, 0.7, 1.0), 0.4) + vec4(vec3(0.0, 0.0, 0.0), 0.0);
+  }else{
+
+    specularHighlights *=  clamp(waterDepth/5.0, 0.0, 1.0);
+
+    out_Color = mix(reflectionColour, refractionColour, reflectiveFactor);
+     out_Color = mix(out_Color, vec4(0.0, 0.3, 0.5, 1.0), 0.2) + vec4(specularHighlights, 0.0);
+  }
+
+  out_Color.a = clamp(waterDepth/5.0, 0.0, 1.0);
  // out_Color = vec4(waterDepth/50.0);
 
 }

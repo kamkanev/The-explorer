@@ -29,6 +29,7 @@ public class Player extends Entity {
 	}
 	
 	public void move(Terrain terrain) {
+
 		checkInputs();
 		super.increaseRotation(0, this.currentTurnSpeed * DisplayManager.getFrameTimeSeconds(), 0);
 		float distance = this.currentSpeed * DisplayManager.getFrameTimeSeconds();
@@ -43,6 +44,60 @@ public class Player extends Entity {
 			upwardsSpeed = 0;
 			isInAir = false;
 			super.getPosition().y = terrainHeightv;
+		}
+		
+	}
+	
+	public void move(Collection<Terrain> terrains, Collection<WaterTile> waters) {
+		checkInputs();
+		super.increaseRotation(0, this.currentTurnSpeed * DisplayManager.getFrameTimeSeconds(), 0);
+		float distance = this.currentSpeed * DisplayManager.getFrameTimeSeconds();
+		float dx = (float) (distance * Math.sin(Math.toRadians(super.getRotY())));
+		float dz = (float) (distance * Math.cos(Math.toRadians(super.getRotY())));
+		super.increasePosition(dx, 0, dz);
+		
+		upwardsSpeed += GRAVITY * DisplayManager.getFrameTimeSeconds();
+		super.increasePosition(0, upwardsSpeed * DisplayManager.getFrameTimeSeconds(), 0);
+		
+		float terrainHeightv = 0;
+		float waterHeightv = 0;
+		boolean isInWater = false;
+		
+		for(WaterTile water : waters) {
+			if(this.getPosition().x >= water.getX() - water.TILE_SIZE && this.getPosition().x <= water.getX() + water.TILE_SIZE && 
+					this.getPosition().z >= water.getZ() - water.TILE_SIZE && this.getPosition().z <= water.getZ() + water.TILE_SIZE && 
+					water.getIsFrozen()) {
+				waterHeightv = water.getHeight();
+				isInWater = true;
+				break;
+			}
+		}
+		
+		for(Terrain terrain : terrains) {
+			if(this.getPosition().x >= terrain.getX() && this.getPosition().x <= terrain.getX() + terrain.getSize() && 
+					this.getPosition().z >= terrain.getZ() && this.getPosition().z <= terrain.getZ() + terrain.getSize()) {
+				terrainHeightv = terrain.getHeightOfTerrain(super.getPosition().x, super.getPosition().z);
+				
+				break;
+			}
+		}
+		
+		if(isInWater && waterHeightv < terrainHeightv) {
+			isInWater = false;
+		}
+		
+		if(!isInWater) {
+			if(super.getPosition().y < terrainHeightv) {
+				upwardsSpeed = 0;
+				isInAir = false;
+				super.getPosition().y = terrainHeightv;
+			}
+		}else {
+			if(super.getPosition().y < waterHeightv) {
+				upwardsSpeed = 0;
+				isInAir = false;
+				super.getPosition().y = waterHeightv;
+			}
 		}
 		
 	}

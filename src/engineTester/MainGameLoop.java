@@ -115,8 +115,10 @@ public class MainGameLoop {
 		WaterRenderer waterRenderer = new WaterRenderer(loader, waterShader, renderer.getProjectionMatrix(), fbos);
 		List<WaterTile> waters = new ArrayList<WaterTile>();
 		
-		WaterTile water = new WaterTile(70, 300, -4, true);
+		WaterTile water = new WaterTile(70, 300, -4, true); 	
 		waters.add(water);
+		waters.add(new WaterTile(90, 85, -5));
+		waters.add(new WaterTile(95, 205, -5));
 		
 		
 		List<Entity> entities = new ArrayList<Entity>();
@@ -244,38 +246,38 @@ public class MainGameLoop {
 //				}
 //			}
 			
-			boolean onTerrain = false;
-			Vector2f offSetToNearestTerrain = null;
-			for (Terrain terr : terrains) {
-				if(player.getPosition().x >= terr.getX() && player.getPosition().x <= terr.getX() + Terrain.getSize() && 
-						player.getPosition().z >= terr.getZ() && player.getPosition().z <= terr.getZ() + Terrain.getSize()) {
-					player.move(terr);
-					onTerrain = true;
-				}else {
-//					System.out.println("out");
-					Vector2f currOffset = new Vector2f(terr.getX() - player.getPosition().x, terr.getZ() - player.getPosition().z);
-					
-					
-					if(offSetToNearestTerrain != null) {
-						float currDiff = (float) Math.sqrt(Math.pow(currOffset.x, 2) + Math.pow(currOffset.y, 2));
-						float nearDiff = (float) Math.sqrt(Math.pow(offSetToNearestTerrain.x, 2) + Math.pow(offSetToNearestTerrain.y, 2));
-						
-						if(currDiff < nearDiff) {
-							offSetToNearestTerrain = currOffset;
-						}
-						
-						
-					}else {
-						offSetToNearestTerrain = currOffset;
-					}
-				}
-				
-			}
-			
-			
-			if(!onTerrain) {
-				player.setPosition(new Vector3f(player.getPosition().x + offSetToNearestTerrain.x, player.getPosition().y, player.getPosition().z + offSetToNearestTerrain.y));
-			}
+//			boolean onTerrain = false;
+//			Vector2f offSetToNearestTerrain = null;
+//			for (Terrain terr : terrains) {
+//				if(player.getPosition().x >= terr.getX() && player.getPosition().x <= terr.getX() + Terrain.getSize() && 
+//						player.getPosition().z >= terr.getZ() && player.getPosition().z <= terr.getZ() + Terrain.getSize()) {
+					player.move(terrains, waters);
+//					onTerrain = true;
+//				}else {
+////					System.out.println("out");
+//					Vector2f currOffset = new Vector2f(terr.getX() - player.getPosition().x, terr.getZ() - player.getPosition().z);
+//					
+//					
+//					if(offSetToNearestTerrain != null) {
+//						float currDiff = (float) Math.sqrt(Math.pow(currOffset.x, 2) + Math.pow(currOffset.y, 2));
+//						float nearDiff = (float) Math.sqrt(Math.pow(offSetToNearestTerrain.x, 2) + Math.pow(offSetToNearestTerrain.y, 2));
+//						
+//						if(currDiff < nearDiff) {
+//							offSetToNearestTerrain = currOffset;
+//						}
+//						
+//						
+//					}else {
+//						offSetToNearestTerrain = currOffset;
+//					}
+//				}
+//				
+//			}
+//			
+//			
+//			if(!onTerrain) {
+//				player.setPosition(new Vector3f(player.getPosition().x + offSetToNearestTerrain.x, player.getPosition().y, player.getPosition().z + offSetToNearestTerrain.y));
+//			}
 			
 			picker.update();
 //			Vector3f terrainPoint = picker.getCurrentTerrainPoint();
