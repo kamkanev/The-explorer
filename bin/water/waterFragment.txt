@@ -78,7 +78,7 @@ void main(void) {
 
   if(isFrozen){
     out_Color = mix(reflectionColour, refractionColour, reflectiveFactor);
-     out_Color = mix(out_Color, vec4(0.0, 0.3, 0.7, 1.0), 0.4) + vec4(vec3(0.0, 0.0, 0.0), 0.0);
+     out_Color = mix(out_Color, vec4(0.0, 0.4, 0.7, 1.0), 0.4) + vec4(vec3(0.0, 0.0, 0.0), 0.0);
   }else{
 
     specularHighlights *=  clamp(waterDepth/5.0, 0.0, 1.0);
