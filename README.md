@@ -1,3 +1,4 @@
-# My-first-java-game-engine
-My first java game engine from scratch in eclipse.
 # The-explorer
+My Java game from scratch in eclipse.
+It's about exploring the world.
+
