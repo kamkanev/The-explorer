@@ -117,8 +117,9 @@ public class MainGameLoop {
 		
 		WaterTile water = new WaterTile(70, 300, -4, true); 	
 		waters.add(water);
-		waters.add(new WaterTile(100, 85, -5));
+		waters.add(new WaterTile(160, 85, -5));
 		waters.add(new WaterTile(100, 205, -5));
+		waters.add(new WaterTile(40, 85, -5));
 		
 		
 		List<Entity> entities = new ArrayList<Entity>();
