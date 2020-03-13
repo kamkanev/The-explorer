@@ -202,7 +202,7 @@ public class MainGameLoop {
 		
 		List<Light> lights = new ArrayList<Light>();
 		lights.add(sun);
-		lights.add(new Light(new Vector3f(220, terrain.getHeightOfTerrain(220, 170) + 12, 170), new Vector3f(2, 2, 2), new Vector3f(1f, 0.001f, 0.002f)));
+		lights.add(new Light(new Vector3f(220, terrain.getHeightOfTerrain(220, 170) + 12, 170), new Vector3f(2, 2, 2), new Vector3f(1f, 0.005f, 0.002f)));
 		lights.add(new Light(new Vector3f(185, terrain.getHeightOfTerrain(185, 293) + 12, 293), new Vector3f(0, 2, 2), new Vector3f(1f, 0.002f, 0.001f)));
 		
 		entities.add(new Entity(lamp, new Vector3f(220, terrain.getHeightOfTerrain(220, 170), 170), 0, 0, 0, 1));
@@ -233,8 +233,36 @@ public class MainGameLoop {
 		
 		MousePicker picker = new MousePicker(camera, renderer.getProjectionMatrix(), terrains);
 		
+		float time = 0;
 		
 		while(!Display.isCloseRequested()){
+			
+			time += DisplayManager.getFrameTimeSeconds() * 1000;
+			time %= 24000;
+			float blendFactor = 0.1f;		
+			if(time >= 0 && time < 5000){
+				
+//				sun.setColour(new Vector3f(0.1f, 0.1f, 0.1f));
+				
+			}else if(time >= 5000 && time < 8000){
+				
+//				sun.setColour(new Vector3f(0.4f, 0.4f, 0.4f));
+				blendFactor = (time - 5000)/(8000 - 5000);
+				
+			}else if(time >= 8000 && time < 21000){
+				
+//				sun.setColour(new Vector3f(1f, 1f, 1f));
+				blendFactor = (time - 8000)/(21000 - 8000);
+//				System.out.println(blendFactor);
+				
+			}else{
+				
+//				sun.setColour(new Vector3f(0.6f, 0.6f, 0.6f));
+				blendFactor = (time - 21000)/(24000 - 21000);
+				
+			}
+			sun.setColour(new Vector3f(blendFactor, blendFactor, blendFactor));
+//			System.out.println(blendFactor);
 			
 			// -------------------------- moving and collision detection ----------------------------- //
 			
