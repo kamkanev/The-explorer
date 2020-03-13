@@ -1,1 +1,11 @@
 /engineTester/
+/entities/
+/guis/
+/models/
+/renderEngine/
+/shaders/
+/skybox/
+/terrains/
+/textures/
+/toolbox/
+/water/

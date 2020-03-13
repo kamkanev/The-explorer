@@ -25,7 +25,7 @@ public class DisplayManager {
 		try {
 			Display.setDisplayMode(new DisplayMode(WIDTH,HEIGHT));
 			Display.create(new PixelFormat(), attribs);
-			Display.setTitle("My First Game engine!");
+			Display.setTitle("The explorer");
 		} catch (LWJGLException e) {
 			e.printStackTrace();
 		}
