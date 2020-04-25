@@ -12,6 +12,8 @@ import models.RawModel;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
+import collision_detection.Hitbox;
+
 public class OBJLoader {
 
 	public static RawModel loadObjModel(String fileName, Loader loader) {
@@ -91,8 +93,11 @@ public class OBJLoader {
 			indicesArray[i] = indices.get(i);
 		}
 		
+		Hitbox hitbox = new Hitbox(vertices);
 		
-		return loader.loadToVAO(verticesArray, textureArray, normalsArray, indicesArray);
+		
+//		return loader.loadToVAO(verticesArray, textureArray, normalsArray, indicesArray);
+		return loader.loadToVAO(verticesArray, textureArray, normalsArray, indicesArray, hitbox);
 
 	}
 

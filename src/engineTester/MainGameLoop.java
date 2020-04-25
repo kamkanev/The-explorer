@@ -215,6 +215,8 @@ public class MainGameLoop {
 		
 		Player player = new Player(pl, new Vector3f(100, 0, 100), 0, 0, 0, 0.5f); 
 		
+//		System.err.println(player.getModel().getRawModel().getHitbox().getWorld_positions());
+		
 		Camera camera = new Camera(player);
 		
 		List<GuiTexture> guis = new ArrayList<GuiTexture>();
@@ -237,31 +239,31 @@ public class MainGameLoop {
 		
 		while(!Display.isCloseRequested()){
 			
-			time += DisplayManager.getFrameTimeSeconds() * 1000;
-			time %= 24000;
-			float blendFactor = 0.1f;		
-			if(time >= 0 && time < 5000){
-				
-//				sun.setColour(new Vector3f(0.1f, 0.1f, 0.1f));
-				
-			}else if(time >= 5000 && time < 8000){
-				
-//				sun.setColour(new Vector3f(0.4f, 0.4f, 0.4f));
-				blendFactor = (time - 5000)/(8000 - 5000);
-				
-			}else if(time >= 8000 && time < 21000){
-				
-//				sun.setColour(new Vector3f(1f, 1f, 1f));
-				blendFactor = (time - 8000)/(21000 - 8000);
-//				System.out.println(blendFactor);
-				
-			}else{
-				
-//				sun.setColour(new Vector3f(0.6f, 0.6f, 0.6f));
-				blendFactor = (time - 21000)/(24000 - 21000);
-				
-			}
-			sun.setColour(new Vector3f(blendFactor, blendFactor, blendFactor));
+//			time += DisplayManager.getFrameTimeSeconds() * 1000;
+//			time %= 24000;
+//			float blendFactor = 0.1f;		
+//			if(time >= 0 && time < 5000){
+//				
+////				sun.setColour(new Vector3f(0.1f, 0.1f, 0.1f));
+//				
+//			}else if(time >= 5000 && time < 8000){
+//				
+////				sun.setColour(new Vector3f(0.4f, 0.4f, 0.4f));
+//				blendFactor = (time - 5000)/(8000 - 5000);
+//				
+//			}else if(time >= 8000 && time < 21000){
+//				
+////				sun.setColour(new Vector3f(1f, 1f, 1f));
+//				blendFactor = (time - 8000)/(21000 - 8000);
+////				System.out.println(blendFactor);
+//				
+//			}else{
+//				
+////				sun.setColour(new Vector3f(0.6f, 0.6f, 0.6f));
+//				blendFactor = (time - 21000)/(24000 - 21000);
+//				
+//			}
+//			sun.setColour(new Vector3f(blendFactor, blendFactor, blendFactor));
 //			System.out.println(blendFactor);
 			
 			// -------------------------- moving and collision detection ----------------------------- //

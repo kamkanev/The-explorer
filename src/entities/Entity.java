@@ -1,8 +1,12 @@
 package entities;
 
 import models.TexturedModel;
+import toolbox.Maths;
 
+import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
+
+import collision_detection.Hitbox;
 
 public class Entity {
 
@@ -21,6 +25,13 @@ public class Entity {
 		this.rotY = rotY;
 		this.rotZ = rotZ;
 		this.scale = scale;
+		
+		Matrix4f matrix = Maths.createTransformationMatrix(position, rotX, rotY, rotZ, scale);
+		
+		this.model.getRawModel().getHitbox().setTransformationMatrix(matrix);
+		
+		this.model.getRawModel().getHitbox().calculateWorldPosition();
+		
 	}
 	
 	public Entity(TexturedModel model, int index, Vector3f position, float rotX, float rotY, float rotZ,
@@ -32,6 +43,13 @@ public class Entity {
 		this.rotY = rotY;
 		this.rotZ = rotZ;
 		this.scale = scale;
+		
+		Matrix4f matrix = Maths.createTransformationMatrix(position, rotX, rotY, rotZ, scale);
+		
+		this.model.getRawModel().getHitbox().setTransformationMatrix(matrix);
+		
+		this.model.getRawModel().getHitbox().calculateWorldPosition();
+		
 	}
 	
 	public float getTextureXOffset() {
