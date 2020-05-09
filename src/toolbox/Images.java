@@ -23,10 +23,17 @@ public class Images {
 	    return resizedImg;
 	}
 	
-	public static void setBackground(JFrame jf,String name) {
-		ImageIcon img = new ImageIcon("res/backgrounds/"+name);
+	public static void setBackground(JFrame jf,String name, boolean isFull) {
+		ImageIcon img = null;
+		
+		if(isFull) {
+			img = new ImageIcon(getScaledImage(new ImageIcon("res/backgrounds/"+name).getImage(), jf.getWidth(), jf.getHeight()));
+		}else {
+			img = new ImageIcon("res/backgrounds/"+name);
+		}
 		
 		JLabel background = new JLabel("", img, JLabel.CENTER);
+		background.setName("back");
 		background.setBounds(0, 0, jf.getWidth(), jf.getHeight());
 		
 		
@@ -38,6 +45,7 @@ public class Images {
 		ImageIcon img = new ImageIcon("res/backgrounds/"+name);
 		
 		JLabel background = new JLabel("", img, JLabel.CENTER);
+		background.setName("back");
 		background.setBounds(0, 0, jc.getWidth(), jc.getHeight());
 		
 		

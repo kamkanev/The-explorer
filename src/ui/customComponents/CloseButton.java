@@ -33,7 +33,7 @@ public class CloseButton extends CustomBorderButton {
 				super.mouseClicked(e);
 				
 				win.dispose();
-//				System.exit(0);
+				System.exit(0);
 //				win.setVisible(true);
 				
 			}

@@ -1,4 +1,4 @@
-package renderEngine;
+	package renderEngine;
 
 import java.io.FileInputStream;
 import java.io.FileReader;
@@ -22,7 +22,6 @@ import org.lwjgl.opengl.GL30;
 import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureLoader;
 
-import collision_detection.Hitbox;
 import de.matthiasmann.twl.utils.PNGDecoder;
 import de.matthiasmann.twl.utils.PNGDecoder.Format;
 
@@ -42,14 +41,25 @@ public class Loader {
 		return new RawModel(vaoID,indices.length);
 	}
 	
-	public RawModel loadToVAO(float[] positions,float[] textureCoords,float[] normals,int[] indices, Hitbox box){
+	public int loadToVAO(float[] positions,float[] textureCoords){
+		int vaoID = createVAO();
+
+		storeDataInAttributeList(0,2,positions);
+		storeDataInAttributeList(1,2,textureCoords);
+
+		unbindVAO();
+		return vaoID;
+	}
+	
+	public RawModel loadToVAO(float[] positions,float[] textureCoords,float[] normals, float[] tangents, int[] indices){
 		int vaoID = createVAO();
 		bindIndicesBuffer(indices);
 		storeDataInAttributeList(0,3,positions);
 		storeDataInAttributeList(1,2,textureCoords);
 		storeDataInAttributeList(2,3,normals);
+		storeDataInAttributeList(3,3,tangents);
 		unbindVAO();
-		return new RawModel(vaoID,indices.length, box);
+		return new RawModel(vaoID,indices.length);
 	}
 	
 	public RawModel loadToVAO(float[] positions, int dimentions) {

@@ -35,7 +35,7 @@ public class MaximizeButton extends CustomBorderButton {
 //				win.setExtendedState(JFrame.MAXIMIZED_BOTH);
 				if(win.getExtendedState() == 0) {
 					win.setExtendedState(JFrame.MAXIMIZED_BOTH);
-					System.err.println(win.getExtendedState());
+//					System.err.println(win.getExtendedState());
 				}else if(win.getExtendedState() == 6) {
 					win.setExtendedState(0);
 				}

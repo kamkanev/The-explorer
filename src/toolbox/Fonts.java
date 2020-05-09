@@ -1,10 +1,15 @@
 package toolbox;
 
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.GraphicsEnvironment;
+import java.awt.Toolkit;
 import java.io.File;
 import java.io.IOException;
+
+import javax.swing.JComponent;
+import javax.swing.JFrame;
 
 public class Fonts {
 	
@@ -42,6 +47,26 @@ public class Fonts {
 		genv.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File(fName)));
 	    
 	    return font;
+	}
+	
+	public static float getFontSizeByScreen(JFrame jf, int devider) {
+//		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		double width = jf.getWidth();
+		double height = jf.getHeight();
+		
+		float size = (float) (width / devider);
+		
+		return size;
+	}
+	
+	public static float getFontSizeByComponetSize(JComponent jc, int devider) {
+//		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		double width = jc.getWidth();
+		double height = jc.getHeight();
+		
+		float size = (float) (width / devider);
+		
+		return size;
 	}
 
 }

@@ -1,5 +1,6 @@
 package engineTester;
 
+import java.io.File;
 import java.io.ObjectInputStream.GetField;
 import java.util.ArrayList;
 import java.util.List;
@@ -7,6 +8,7 @@ import java.util.Random;
 
 import models.RawModel;
 import models.TexturedModel;
+import normalMappingObjConverter.NormalMappedObjLoader;
 
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
@@ -32,15 +34,33 @@ import entities.Camera;
 import entities.Entity;
 import entities.Light;
 import entities.Player;
+import fontMeshCreator.FontType;
+import fontMeshCreator.GUIText;
+import fontRendering.TextMaster;
 import guis.GuiRenderer;
 import guis.GuiTexture;
 
 public class MainGameLoop {
+	
+	public static String heroName = "";
 
 	public static void main(String[] args) {
 
+		runGame();
+
+	}
+	
+	public static void runGame() {
 		DisplayManager.createDisplay();
+		
 		Loader loader = new Loader();
+		
+		TextMaster.init(loader);
+		
+		FontType font = new FontType(loader.loadTexture("arial"), new File("res/arial.fnt"));
+		GUIText text = new GUIText("Hello "+heroName, 1f, font, new Vector2f(0 ,0 ), 1f, true);
+		text.setColour(0.5f, 0.5f, 0f);
+		
 		MasterRenderer renderer = new MasterRenderer(loader);
 		
 		//Terrain textures
@@ -60,6 +80,8 @@ public class MainGameLoop {
 		TerrainTexture blendMap2 = new TerrainTexture(loader.loadTexture("blendMap3"));
 		
 		//**************************
+		
+		TexturedModel cube = new TexturedModel(OBJLoader.loadObjModel("crate", loader), new ModelTexture(loader.loadTexture("white")));
 		
 		RawModel model = OBJLoader.loadObjModel("tree", loader);
 		TexturedModel treeModel = new TexturedModel(model,new ModelTexture(loader.loadTexture("tree")));
@@ -123,26 +145,43 @@ public class MainGameLoop {
 		
 		
 		List<Entity> entities = new ArrayList<Entity>();
+		List<Entity> normalMapEntities = new ArrayList<Entity>();
+		
+		TexturedModel stoneModel = new TexturedModel(NormalMappedObjLoader.loadOBJ("boulder", loader), 
+				new ModelTexture(loader.loadTexture("boulder")));
+		stoneModel.getTexture().setNormalMap(loader.loadTexture("boulderNormal"));
+		stoneModel.getTexture().setShineDamper(20);
+		stoneModel.getTexture().setReflectivity(1f);
 		
 		Random random = new Random();
 		
-		for(int i=0;i<140;i++){
-			float x = random.nextFloat()* Terrain.getSize() * (terrain2.getX() / Terrain.getSize() - 1);
-			float z = random.nextFloat()* Terrain.getSize() * (terrain2.getZ() / Terrain.getSize() + 1);
-			float y = terrain2.getHeightOfTerrain(x, z);
+//		entities.add(new Entity(cube, new Vector3f(100, 10, 100), 0, 0, 0, 0.1f));
+		
+		for(int i=0; i< 10; i++) {
+			float x = random.nextFloat()* Terrain.getSize() + terrain.getX();
+			float z = random.nextFloat()* Terrain.getSize() + terrain.getZ();
+			float y = terrain.getHeightOfTerrain(x, z) + (random.nextFloat() * 20 - 15);
 			
-				entities.add(new Entity(tree2Model, 1, new Vector3f(x, y, z),0,0,0,1.3f));
-
-			
-			 x = random.nextFloat()* Terrain.getSize() * (terrain2.getX() / Terrain.getSize() -1);
-			 z = random.nextFloat()* Terrain.getSize() * (terrain2.getZ() / Terrain.getSize() + 1);
-			 y = terrain2.getHeightOfTerrain(x, z);
-			entities.add(new Entity(bush, 1, new Vector3f(x, y, z),0,0,0,3));
-			
+				normalMapEntities.add(new Entity(stoneModel, new Vector3f(x, y, z), random.nextFloat() * 360, random.nextFloat() * 360, random.nextFloat() * 360, 1));
 		}
 		
+//		for(int i=0;i<40;i++){
+//			float x = random.nextFloat()* Terrain.getSize() * (terrain2.getX() / Terrain.getSize() - 1);
+//			float z = random.nextFloat()* Terrain.getSize() * (terrain2.getZ() / Terrain.getSize() + 1);
+//			float y = terrain2.getHeightOfTerrain(x, z);
+//			
+//				entities.add(new Entity(tree2Model, 1, new Vector3f(x, y, z),0,0,0,1.3f));
+//
+//			
+//			 x = random.nextFloat()* Terrain.getSize() * (terrain2.getX() / Terrain.getSize() -1);
+//			 z = random.nextFloat()* Terrain.getSize() * (terrain2.getZ() / Terrain.getSize() + 1);
+//			 y = terrain2.getHeightOfTerrain(x, z);
+//			entities.add(new Entity(bush, 1, new Vector3f(x, y, z),0,0,0,3));
+//			
+//		}
 		
-		for(int i=0;i<180;i++){
+		
+		for(int i=0;i<50;i++){
 			float x = random.nextFloat()* Terrain.getSize() * (terrain.getX() / Terrain.getSize() + 1);
 			float z = random.nextFloat()* Terrain.getSize() * (terrain.getZ() / Terrain.getSize() + 1);
 			float y = terrain.getHeightOfTerrain(x, z);
@@ -182,7 +221,7 @@ public class MainGameLoop {
 		}
 		
 		
-		for(int i=0;i<150; i++) {
+		for(int i=0;i<10; i++) {
 			
 			float x = random.nextFloat()* Terrain.getSize() * (terrain.getX() / Terrain.getSize() + 1);
 			float z = random.nextFloat()* Terrain.getSize() * (terrain.getZ() / Terrain.getSize() + 1);
@@ -326,22 +365,23 @@ public class MainGameLoop {
 			float distance = 2 * (camera.getPosition().y - water.getHeight());
 			camera.getPosition().y -= distance;
 			camera.invertPitch();
-			renderer.renderScene(entities, terrains, lights, camera, player, new Vector4f(0, 1, 0, -water.getHeight()+1f));
+			renderer.renderScene(entities, normalMapEntities, terrains, lights, camera, player, new Vector4f(0, 1, 0, -water.getHeight()+1f));
 			camera.getPosition().y += distance;
 			camera.invertPitch();
 			
 			//render refraction texture
 			fbos.bindRefractionFrameBuffer();
-			renderer.renderScene(entities, terrains, lights, camera, player, new Vector4f(0, -1, 0, water.getHeight()+1f));
+			renderer.renderScene(entities, normalMapEntities, terrains, lights, camera, player, new Vector4f(0, -1, 0, water.getHeight()+1f));
 			
 			
 			//render to screen
 			GL11.glDisable(GL30.GL_CLIP_DISTANCE0);
 			fbos.unbindCurrentFrameBuffer();
-			renderer.renderScene(entities, terrains, lights, camera, player, new Vector4f(0, -1, 0, 100000));
+			renderer.renderScene(entities, normalMapEntities, terrains, lights, camera, player, new Vector4f(0, -1, 0, 100000));
 			waterRenderer.render(waters, camera, sun);
 			
 			guiRenderer.render(guis);
+			TextMaster.render();
 			
 			DisplayManager.updateDisplay();
 			
@@ -353,7 +393,6 @@ public class MainGameLoop {
 		renderer.cleanUp();
 		loader.cleanUp();
 		DisplayManager.closeDisplay();
-
 	}
 
 }
