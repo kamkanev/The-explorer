@@ -1,17 +1,14 @@
 <h1>The-explorer</h1>
 
 
-
   <h2>Description</h2>
 
-  ***
 
   <p>My Java game from scratch in eclipse.</p>
   <p>It's about exploring the world.</p>
 
   <h2>Controls</h2>
 
-  ***
 
   * Move - WSAD
   * Rotate camera
@@ -20,7 +17,6 @@
 
 <h2>Main Menu</h2>
 
-***
 
   The main menu have:
 
@@ -41,7 +37,6 @@
 
 <h2>Screenshots</h2>
 
-***
 
   1. <h5>Game</h5>
 
