@@ -10,8 +10,8 @@ import ui.customComponents.BorderPanel;
 
 public class MenuTester {
 	
-	public static final String TITLE = "Adroandra";//Adroandra
-	public static final String SUBTITLE = "The child of prophecy";//The child of prophecy
+	public static final String TITLE = "The Explorer";//Adroandra
+	public static final String SUBTITLE = "";//The child of prophecy
 	public static HashMap<String, JFrame> windows = new HashMap<String, JFrame>();
 
 	public static void main(String[] args) {
