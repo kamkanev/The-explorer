@@ -21,11 +21,13 @@
   The main menu have:
 
   1. New Game - working
+
     * You can create new game by entering character name,<br>
     word name,gender and world seed.
 
 
   2. Load Game - working
+  
     * You can delete and load worlds.
 
 
