@@ -13,11 +13,16 @@ public class ModelTexture {
 	
 	private int numberOfRows = 1;
 	
-	public ModelTexture(int texture){
+	private String textureName = "";
+	
+//	public ModelTexture(int texture){
+//		this.textureID = texture;
+//	}
+	
+	public ModelTexture(String name, int texture){
 		this.textureID = texture;
+		this.textureName = name;
 	}
-	
-	
 	
 	public int getNumberOfRows() {
 		return numberOfRows;
@@ -65,7 +70,9 @@ public class ModelTexture {
 		this.useFakeLighting = useFakeLighting;
 	}
 
-
+	public String getName() {
+		return textureName;
+	}
 
 	public int getID(){
 		return textureID;

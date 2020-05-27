@@ -11,6 +11,7 @@ import org.lwjgl.util.vector.Vector4f;
 
 import terrains.Terrain;
 import entities.Camera;
+import entities.Entity;
 
 public class MousePicker {
 
@@ -24,17 +25,29 @@ public class MousePicker {
 	private Camera camera;
 	
 	private List<Terrain> terrains;
+	private List<Entity> entities;
 	private Vector3f currentTerrainPoint;
+	private Vector3f currentEntityPoint;
+	private Vector2f currentGuiPoint;
 
-	public MousePicker(Camera cam, Matrix4f projection, List<Terrain> terrains) {
+	public MousePicker(Camera cam, Matrix4f projection, List<Terrain> terrains, List<Entity> entities) {
 		camera = cam;
 		projectionMatrix = projection;
 		viewMatrix = Maths.createViewMatrix(camera);
 		this.terrains = terrains;
+		this.entities = entities;
 	}
 	
 	public Vector3f getCurrentTerrainPoint() {
 		return currentTerrainPoint;
+	}
+	
+	public Vector3f getCurrentEntityPoint() {
+		return currentEntityPoint;
+	}
+	
+	public Vector2f getCurrentGUIPoint() {
+		return currentGuiPoint;
 	}
 
 	public Vector3f getCurrentRay() {
@@ -42,12 +55,15 @@ public class MousePicker {
 	}
 
 	public void update() {
+		
 		viewMatrix = Maths.createViewMatrix(camera);
 		currentRay = calculateMouseRay();
 		if (intersectionInRange(0, RAY_RANGE, currentRay)) {
-			currentTerrainPoint = binarySearch(0, 0, RAY_RANGE, currentRay);
+			currentTerrainPoint = TerrainbinarySearch(0, 0, RAY_RANGE, currentRay);
+			currentEntityPoint = EntitybinarySearch(0, 0, RAY_RANGE, currentRay);
 		} else {
 			currentTerrainPoint = null;
+			currentEntityPoint = null;
 		}
 	}
 
@@ -55,6 +71,9 @@ public class MousePicker {
 		float mouseX = Mouse.getX();
 		float mouseY = Mouse.getY();
 		Vector2f normalizedCoords = getNormalisedDeviceCoordinates(mouseX, mouseY);
+		
+		currentGuiPoint = getNormalisedDeviceCoordinates(mouseX, mouseY);
+		
 		Vector4f clipCoords = new Vector4f(normalizedCoords.x, normalizedCoords.y, -1.0f, 1.0f);
 		Vector4f eyeCoords = toEyeCoords(clipCoords);
 		Vector3f worldRay = toWorldCoords(eyeCoords);
@@ -90,7 +109,7 @@ public class MousePicker {
 		return Vector3f.add(start, scaledRay, null);
 	}
 	
-	private Vector3f binarySearch(int count, float start, float finish, Vector3f ray) {
+	private Vector3f TerrainbinarySearch(int count, float start, float finish, Vector3f ray) {
 		float half = start + ((finish - start) / 2f);
 		if (count >= RECURSION_COUNT) {
 			Vector3f endPoint = getPointOnRay(ray, half);
@@ -102,10 +121,40 @@ public class MousePicker {
 			}
 		}
 		if (intersectionInRange(start, half, ray)) {
-			return binarySearch(count + 1, start, half, ray);
+			return TerrainbinarySearch(count + 1, start, half, ray);
 		} else {
-			return binarySearch(count + 1, half, finish, ray);
+			return TerrainbinarySearch(count + 1, half, finish, ray);
 		}
+	}
+	
+	private Vector3f EntitybinarySearch(int count, float start, float finish, Vector3f ray) {
+		
+		float half = start + ((finish - start) / 2f);
+		if (count >= RECURSION_COUNT) {
+			Vector3f endPoint = getPointOnRay(ray, half);
+			Entity entity = null;
+			
+			for(Entity e : entities) {
+				if(e.areCollidingWithPoint(endPoint)) {
+					entity = e;
+					endPoint = e.getPosition();
+					break;
+				}
+			}
+			
+			if (entity != null) {
+				return endPoint;
+			} else {
+				return null;
+			}
+		}
+		
+		if (intersectionInRange(start, half, ray)) {
+			return EntitybinarySearch(count + 1, start, half, ray);
+		} else {
+			return EntitybinarySearch(count + 1, half, finish, ray);
+		}
+		
 	}
 
 	private boolean intersectionInRange(float start, float finish, Vector3f ray) {

@@ -56,7 +56,7 @@ public class Camera {
 		
 		position.x = player.getPosition().x - offsetX;
 		position.z = player.getPosition().z - offsetZ;
-		position.y = player.getPosition().y + verticalDistance;
+		position.y = player.getPosition().y + verticalDistance + (player.getHitbox().getMaxis_positions().get(3))/2;
 		
 		
 	}

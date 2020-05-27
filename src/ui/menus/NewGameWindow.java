@@ -28,6 +28,7 @@ import javax.swing.JTextField;
 import engineTester.MainGameLoop;
 import toolbox.Fonts;
 import toolbox.Images;
+import toolbox.JavaToMySQL;
 import toolbox.World;
 import ui.customComponents.BorderPanel;
 
@@ -332,6 +333,8 @@ public class NewGameWindow extends JFrame {
 		submit.setBackground(Color.GREEN);
 		submit.setVisible(true);
 		
+		submit.setFocusable(false);
+		
 		submit.addMouseListener(new MouseAdapter() {
 			
 			@Override
@@ -354,9 +357,13 @@ public class NewGameWindow extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				World.createNewWorld(getInfo());
+//				World.createNewWorld(getInfo());
+				JavaToMySQL.putNewWorldWithPlayer(getInfo());
+				
 				dispose();
 				MainGameLoop.heroName = chName.getText();
+				MainGameLoop.heroId = JavaToMySQL.getLastPlayerId();
+				MainGameLoop.worldId = JavaToMySQL.getLastWorldId();
 				MainGameLoop.runGame();
 
 			}
@@ -451,6 +458,8 @@ public class NewGameWindow extends JFrame {
 			info.put("mode", sandMode.getName());
 			info.put(seedName.getName(), seedName.getText());
 		}
+		
+		info.put("coords", "100/0/100");
 		
 		return info;
 		

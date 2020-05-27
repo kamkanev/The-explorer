@@ -11,6 +11,7 @@ import java.util.List;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
+import collision_detection.Hitbox;
 import models.RawModel;
 import renderEngine.Loader;
 
@@ -81,8 +82,19 @@ public class NormalMappedObjLoader {
 		float furthest = convertDataToArrays(vertices, textures, normals, verticesArray,
 				texturesArray, normalsArray, tangentsArray);
 		int[] indicesArray = convertIndicesListToArray(indices);
+		
+		List<Vector3f> verticesPositions = new ArrayList<Vector3f>();
+		
+		for(VertexNM vec : vertices) {
+			Vector3f pos = new Vector3f(vec.getPosition());
+			
+			verticesPositions.add(pos);
+			
+		}
+		
+		Hitbox box = new Hitbox(verticesPositions);
 
-		return loader.loadToVAO(verticesArray, texturesArray, normalsArray, tangentsArray, indicesArray);
+		return loader.loadToVAO(objFileName, verticesArray, texturesArray, normalsArray, tangentsArray, indicesArray, box);
 	}
 
 	//NEW 

@@ -3,8 +3,11 @@ package entities;
 import java.util.Collection;
 
 import org.lwjgl.input.Keyboard;
+import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
+import fontMeshCreator.FontType;
+import fontMeshCreator.GUIText;
 import models.TexturedModel;
 import renderEngine.DisplayManager;
 import terrains.Terrain;
@@ -23,9 +26,22 @@ public class Player extends Entity {
 	private float upwardsSpeed = 0;
 	
 	private boolean isInAir = false;
+	
+	private int health = 100;
+	private int maxHealth = 100;
+	private int level = 0;
+	private int xp = 0;
+	private int id = 1;
+	private float radius = 2;
 
-	public Player(TexturedModel model, Vector3f position, float rotX, float rotY, float rotZ, float scale) {
-		super(model, position, rotX, rotY, rotZ, scale);
+	public Player(int worldId, int id, String name, TexturedModel model, Vector3f position, float rotX, float rotY, float rotZ, float scale) {
+		super(worldId, model, position, rotX, rotY, rotZ, scale);
+		this.isAlive = true;
+		this.name = name;
+		this.id = id;
+		this.radius = this.getHitbox().getMaxis_positions().get(3) - this.getHitbox().getMaxis_positions().get(2);
+		System.err.println(radius);
+//		System.err.println("Player " + id);
 	}
 	
 	public void move(Terrain terrain) {
@@ -130,6 +146,49 @@ public class Player extends Entity {
 		if(Keyboard.isKeyDown(Keyboard.KEY_SPACE)) {
 			jump();
 		}
+		
+	}
+	
+	public int getPlayerId() {
+		return id;
+	}
+	public int getLevel() {
+		return level;
+	}
+	public int getXP() {
+		return xp;
+	}
+	public int getHealth() {
+		return health;
+	}
+	public int getMaxHealth() {
+		return maxHealth;
+	}
+	
+	public void setPlayerId(int id) {
+		this.id = id;
+	}
+	public void setLevel(int level) {
+		this.level = level;
+	}
+	public void setXP(int xp) {
+		this.xp = xp;
+	}
+	public void setHealth(int health) {
+		this.health = health;
+	}
+	public void setMaxHealth(int maxHealth) {
+		this.maxHealth = maxHealth;
+	}
+
+	public GUIText getPositionToText(FontType font) {
+		
+		String text = ""+String.format("%.0f", this.getPosition().x)+" / "+String.format("%.0f", this.getPosition().y)+" / "+String.format("%.0f", this.getPosition().z);
+		GUIText pos = new GUIText(text, 1f, font, new Vector2f(0.85f ,0 ), 0.2f, true);
+		
+		pos.setColour(1f, 1f, 1f);
+		
+		return pos;
 		
 	}
 

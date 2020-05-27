@@ -5,12 +5,6 @@ import org.lwjgl.util.vector.Vector3f;
 
 import fontRendering.TextMaster;
 
-/**
- * Represents a piece of text in the game.
- * 
- * @author Karl
- *
- */
 public class GUIText {
 
 	private String textString;
@@ -61,7 +55,7 @@ public class GUIText {
 		this.position = position;
 		this.lineMaxSize = maxLineLength;
 		this.centerText = centered;
-		TextMaster.loadText(this);;
+//		TextMaster.loadText(this);
 	}
 
 	/**

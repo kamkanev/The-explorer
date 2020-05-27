@@ -5,6 +5,7 @@ import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
 import entities.Camera;
+import entities.Entity;
 
 public class Maths {
 	
@@ -46,6 +47,21 @@ public class Maths {
 		Vector3f negativeCameraPos = new Vector3f(-cameraPos.x,-cameraPos.y,-cameraPos.z);
 		Matrix4f.translate(negativeCameraPos, viewMatrix, viewMatrix);
 		return viewMatrix;
+	}
+	
+	public static float calculateDistance(Entity e1, Entity e2) {
+		
+		float dis = 0;
+		
+		float x = Math.abs(e1.getPosition().x - e2.getPosition().x);
+		float z = Math.abs(e1.getPosition().z - e2.getPosition().z);
+		float y = Math.abs(e1.getPosition().y - e2.getPosition().y);
+		
+		float disXZ = (float) Math.sqrt(x*x + z*z);
+		dis = (float) Math.sqrt(disXZ*disXZ + y*y);
+		
+		return dis;
+		
 	}
 
 }

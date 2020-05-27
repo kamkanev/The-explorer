@@ -1,8 +1,12 @@
 package entities;
 
 import models.TexturedModel;
+import toolbox.Maths;
 
+import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
+
+import collision_detection.Hitbox;
 
 public class Entity {
 
@@ -10,10 +14,17 @@ public class Entity {
 	private Vector3f position;
 	private float rotX, rotY, rotZ;
 	private float scale;
+	private Hitbox hitbox = null;
 	
 	private int textureIndex = 0;
+	
+	private int id = 1;
+	
+	protected String name = "entity";
+	protected boolean isAlive = false;
+	private int worldId = 1;
 
-	public Entity(TexturedModel model, Vector3f position, float rotX, float rotY, float rotZ,
+	public Entity(int worldId, TexturedModel model, Vector3f position, float rotX, float rotY, float rotZ,
 			float scale) {
 		this.model = model;
 		this.position = position;
@@ -21,9 +32,23 @@ public class Entity {
 		this.rotY = rotY;
 		this.rotZ = rotZ;
 		this.scale = scale;
+		this.worldId = worldId;
+		
+		Matrix4f mat = Maths.createTransformationMatrix(position, rotX, rotY, rotZ, scale);
+		
+//		System.err.println(mat.m00 + " " + mat.m10 + " " + mat.m20 + " " + mat.m30);
+//		System.err.println("-------------------");
+//		System.err.println(mat);
+		
+		hitbox = new Hitbox(this.getModel().getRawModel().getHitbox().getLocal_positions(), mat);
+		
+//		this.model.getRawModel().getHitbox().setTransformationMatrix(mat);
+//		this.model.getRawModel().getHitbox().calculateWorldPositionOutSide();
+		
+//		System.err.println("normal "+this.model.getRawModel().getHitbox().getWorld_positions());
 	}
 	
-	public Entity(TexturedModel model, int index, Vector3f position, float rotX, float rotY, float rotZ,
+	public Entity(int worldId, TexturedModel model, int index, Vector3f position, float rotX, float rotY, float rotZ,
 			float scale) {
 		this.model = model;
 		this.textureIndex = index;
@@ -32,6 +57,44 @@ public class Entity {
 		this.rotY = rotY;
 		this.rotZ = rotZ;
 		this.scale = scale;
+		this.worldId = worldId;
+		
+		Matrix4f mat = Maths.createTransformationMatrix(position, rotX, rotY, rotZ, scale);
+		
+//		System.err.println(mat.m00 + " " + mat.m10 + " " + mat.m20 + " " + mat.m30);
+//		System.err.println("-------------------");
+//		System.err.println(mat);
+		
+		hitbox = new Hitbox(this.getModel().getRawModel().getHitbox().getLocal_positions(), mat);
+		
+//		this.model.getRawModel().getHitbox().setTransformationMatrix(Maths.createTransformationMatrix(position, rotX, rotY, rotZ, scale));
+//		this.model.getRawModel().getHitbox().calculateWorldPositionOutSide();
+		
+//		System.err.println("atlas "+this.model.getRawModel().getHitbox().getLocal_positions());
+	}
+	
+	public boolean areCollidingWithPoint(Vector3f point) {
+		
+		Hitbox box = hitbox;
+		
+//		System.err.println(box.getMaxis_positions());
+//		System.err.println("::::::::::::::::::::::");
+//		System.err.println(box.getMaxis1_positions());
+//		System.err.println("---------------------");
+//		System.err.println(point);
+//		System.err.println("oooooooooooooooooooooooo");
+//		System.err.println(hitbox.getTransformationMatrix());
+		
+		if(point.x >= box.getMaxis_positions().get(0) && point.x <= box.getMaxis_positions().get(1) && 
+			point.y >= box.getMaxis_positions().get(2) && point.y <= box.getMaxis_positions().get(3) && 
+			point.z >= box.getMaxis_positions().get(4) && point.z <= box.getMaxis_positions().get(5)) {
+			
+			return true;
+			
+		}
+		
+		return false;
+		
 	}
 	
 	public float getTextureXOffset() {
@@ -54,6 +117,10 @@ public class Entity {
 		this.rotX += dx;
 		this.rotY += dy;
 		this.rotZ += dz;
+	}
+	
+	public void setId(int id) {
+		this.id = id;
 	}
 
 	public TexturedModel getModel() {
@@ -102,6 +169,26 @@ public class Entity {
 
 	public void setScale(float scale) {
 		this.scale = scale;
+	}
+	
+	public Hitbox getHitbox() {
+		return hitbox;
+	}
+	public int getWorldId() {
+		return worldId;
+	}
+	
+	public int getId() {
+		return id;
+	}
+	public boolean getIsAlive() {
+		return isAlive;
+	}
+	public String getName() {
+		return name;
+	}
+	public int gettextureIndex() {
+		return textureIndex;
 	}
 
 }
