@@ -17,7 +17,7 @@ import textures.ModelTexture;
 class EntityTest {
 
 	@Test
-	void test() {
+	void testHitboxBorder() {
 		
 		DisplayManager.createDisplay();
 		

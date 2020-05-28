@@ -40,7 +40,7 @@ public class Player extends Entity {
 		this.name = name;
 		this.id = id;
 		this.radius = this.getHitbox().getMaxis_positions().get(3) - this.getHitbox().getMaxis_positions().get(2);
-		System.err.println(radius);
+//		System.err.println(radius);
 //		System.err.println("Player " + id);
 	}
 	
@@ -179,6 +179,30 @@ public class Player extends Entity {
 	}
 	public void setMaxHealth(int maxHealth) {
 		this.maxHealth = maxHealth;
+	}
+	
+	public void increaseXP(int xp) {
+		
+		this.xp += xp;
+		
+		if(this.xp > level * 100) {
+			
+			this.xp -= level * 100;
+			this.level ++;
+			
+		}
+		
+	}
+	
+	public void takeDamge(int damage) {
+		
+		this.health -= damage;
+		
+		if(health <= 0) {
+			this.health = 0;
+			//dead
+		}
+		
 	}
 
 	public GUIText getPositionToText(FontType font) {
