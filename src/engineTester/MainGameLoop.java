@@ -194,7 +194,7 @@ public class MainGameLoop {
 			 z = random.nextFloat()* Terrain.getSize() * (terrain2.getZ() / Terrain.getSize() + 1);
 			 y = terrain2.getHeightOfTerrain(x, z);
 			 
-			if(i%2 == 0) {
+			if(i%3 == 0) {
 				
 				entities.add(new Entity(worldId, bush, 1, new Vector3f(x, y, z),0,0,0,3));
 				
@@ -233,7 +233,7 @@ public class MainGameLoop {
 //					 entities.add(new Entity(worldId, bush, 0, new Vector3f(x, y, z),0,0,0,3));
 				 
 			 
-				 if(i%2 == 0) {
+				 if(i%4 == 0) {
 					 entities.add(new Entity(worldId, bush, 0, new Vector3f(x, y, z),0,0,0,3));
 				 }else {
 //					 entities.add(new Entity(worldId, bush, 2, new Vector3f(x, y, z),0,0,0,3));
@@ -480,6 +480,7 @@ public class MainGameLoop {
 		
 		JavaToMySQL.updatePlayer(player);
 		JavaToMySQL.updateEntities(entities);
+		JavaToMySQL.updatePlayTime(worldId);
 
 		fbos.cleanUp();
 		waterShader.cleanUp();
@@ -758,6 +759,7 @@ public class MainGameLoop {
 		
 		JavaToMySQL.updatePlayer(player);
 		JavaToMySQL.updateEntities(entities);
+		JavaToMySQL.updatePlayTime(worldId);
 
 		fbos.cleanUp();
 		waterShader.cleanUp();

@@ -331,6 +331,37 @@ public class JavaToMySQL {
     	
     }
     
+    public static void updatePlayTime(int worldId) {
+    	
+    	Date utilDate = new Date();
+    	
+    	String query = "update worlds set lastPlayed = '"+ new Timestamp(utilDate.getTime()) +"' where id = "+worldId+"";
+    	
+    	try {
+            // opening database connection to MySQL server
+            con = DriverManager.getConnection(url, user, password);
+
+            // getting Statement object to execute query
+            stmt = con.createStatement();
+
+            // executing query
+            
+            stmt.executeUpdate(query);
+            
+            System.out.println("Update to players complete");
+
+
+        } catch (SQLException sqlEx) {
+            sqlEx.printStackTrace();
+        } finally {
+        	System.out.println("Update player end.");
+            //close connection ,stmt and resultset here
+            try { con.close(); } catch(SQLException se) { /*can't do anything */ }
+            try { stmt.close(); } catch(SQLException se) { /*can't do anything */ }
+        }
+    	
+    }
+    
     public static List<JPanel> getWorlds(JFrame win) {
     	String query = "select * from worlds as w join players as p on w.playerId = p.id;";
     	

@@ -21,6 +21,7 @@ import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
@@ -358,13 +359,21 @@ public class NewGameWindow extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 //				World.createNewWorld(getInfo());
-				JavaToMySQL.putNewWorldWithPlayer(getInfo());
-				
-				dispose();
-				MainGameLoop.heroName = chName.getText();
-				MainGameLoop.heroId = JavaToMySQL.getLastPlayerId();
-				MainGameLoop.worldId = JavaToMySQL.getLastWorldId();
-				MainGameLoop.runGame();
+				if(worldName.getText().length() >= 3 && chName.getText().length() >= 3) {
+					
+					JavaToMySQL.putNewWorldWithPlayer(getInfo());
+					
+					dispose();
+					MainGameLoop.heroName = chName.getText();
+					MainGameLoop.heroId = JavaToMySQL.getLastPlayerId();
+					MainGameLoop.worldId = JavaToMySQL.getLastWorldId();
+					MainGameLoop.runGame();
+					
+				}else {
+					
+					JOptionPane.showMessageDialog(getContentPane(), "World and Character names muss be at least 3 characters long.", "Error", JOptionPane.ERROR_MESSAGE);
+					
+				}
 
 			}
 		});
